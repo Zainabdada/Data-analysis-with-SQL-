@@ -1,0 +1,14 @@
+--Upload a csv of a table from Donation_Data and Donor_Datav2 of everyone from the Sales industry in descending order of donation.
+-- Include their first and last name, email, donation, donation frequency and job field.
+
+SELECT 
+   * FROM 
+    Donation_Data 
+LEFT JOIN 
+    donor_datav2 
+ON 
+    Donation_Data.id = Donor_Datav2.id
+WHERE 
+    Donation_Data.job_field = 'Sales'
+ORDER BY 
+    Donation_Data.donation DESC;

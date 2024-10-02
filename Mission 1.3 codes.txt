@@ -1,0 +1,12 @@
+--1️⃣ What is the total donation amount from the state of Georgia?
+select SUM (donation) from donation_data WHERE state = 'Georgia';
+--2️⃣ How many donors from California have a first name that ends with an 'e'?
+select count (*) from donation_data where state = 'California' and first_name like '%e';
+
+--3️⃣ What is the minimum donation from women working in the Legal industry?
+Select MIN (donation) from donation_data where gender = 'Female' and job_field = 'Legal';
+
+--4️⃣ What is the maximum donation from men in Ohio working in Sales?
+SELECT MAX(donation) FROM donation_data WHERE gender = 'Male' AND state = 'Ohio' AND job_field = 'Sales'
+--5️⃣ What is the average donation from men with an XS shirt size?
+SELECT AVG(donation) FROM donation_data WHERE gender = 'Male' AND shirt_size = 'XS'

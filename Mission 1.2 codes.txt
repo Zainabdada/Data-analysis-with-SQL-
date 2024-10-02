@@ -1,0 +1,21 @@
+-- Who is the top donor working in Business Development living in California?
+-- How much did they donate?
+SELECT * FROM Donation_Data
+where job_field = 'Business Development' and state = 'California';
+
+--Who has an email address ending with '.info' and What are their names?
+select * from Donation_Data where email like '%.info'
+
+--Which donor has a first name that starts with a 'G' and ends with a 't' ?
+select * FROM Donation_Data where first_name like 'G%t';
+
+-- How many donors have a shirt size of 3XL and live in Colorado?
+SELECT count (*) from Donation_Data where shirt_size = '3XL'  AND state = 'Colorado'
+
+--Upload a CSV of the bottom 5 donors who are female, working in the Legal Industry and gave over $300.
+--SQL Command
+SELECT *
+FROM Donation_Data
+WHERE gender = 'Female' AND job_field = 'Legal' AND donation > 300
+ORDER BY donation ASC
+LIMIT 5;

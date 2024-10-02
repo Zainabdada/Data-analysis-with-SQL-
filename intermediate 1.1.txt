@@ -1,0 +1,18 @@
+--1️⃣ Join the tables to link sales data with book authors.
+SELECT *
+FROM book_sales bs
+JOIN book_details bd ON bs.book_id = bd.book_id;
+
+--2️⃣ Aggregate the total quantity of books sold for each author.
+SELECT bd.author, SUM(bs.quantity) AS total_quantity_sold
+FROM book_sales bs
+JOIN book_details bd ON bs.book_id = bd.book_id
+GROUP BY bd.author;
+
+--3️⃣Determine the top 5 authors with the highest total book sales quantities. 
+SELECT bd.author, SUM(bs.quantity) AS total_quantity_sold
+FROM book_sales bs
+JOIN book_details bd ON bs.book_id = bd.book_id
+GROUP BY bd.author
+ORDER BY total_quantity_sold DESC
+LIMIT 5;

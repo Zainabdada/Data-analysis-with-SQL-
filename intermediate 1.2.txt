@@ -1,0 +1,76 @@
+--To view all data from the Employee Information table:
+SELECT * FROM Employee_Information;
+
+--To combine the two tables:
+SELECT * 
+FROM Employee_Information 
+JOIN Employee_Performance 
+ON Employee_Information.Employee_ID = Employee_Performance.Employee_ID;
+
+--Data Cleaning and Preparation
+--Employee Performance table contains data includes some "dirty data".
+--Specifically, the 'Employee_Satisfaction_Score' and 'Manager_Feedback_Score' 
+--columns contain some non-numeric values and missing data. 
+--These dirty data need to be cleaned first before we do analyses.
+
+--For the Non-Numeric Values in 'Employee_Satisfaction_Score':
+UPDATE Employee_Performance 
+SET Employee_Satisfaction_Score = NULL 
+WHERE Employee_Satisfaction_Score GLOB '*[^0-9]*';
+/*The GLOB function sets non-numeric values in 'Employee_Satisfaction_Score' to NULL.*/
+
+--For the Missing Values in 'Manager_Feedback_Score':
+UPDATE Employee_Performance 
+SET Manager_Feedback_Score = 0 
+WHERE Manager_Feedback_Score IS NULL;
+
+/*This replaces NULL values in 'Manager_Feedback_Score'  
+with 0 (or any other default value your analysis requires)*/
+
+--1️⃣ Which department has the highest turnover in the last year?
+SELECT Department, COUNT(Employee_Information.Employee_ID) AS Turnover
+FROM Employee_Information
+JOIN Employee_Performance 
+ON Employee_Information.Employee_ID = Employee_Performance.Employee_ID
+WHERE Termination_Date BETWEEN '2022-01-01' AND '2022-12-31'
+GROUP BY Department
+ORDER BY Turnover DESC
+LIMIT 1;
+
+
+--What is the employee turnover for this quarter as compared to the previous quarters of the year? 
+SELECT 
+    Termination_Year,
+    Termination_Quarter,
+    COUNT(Employee_ID) AS Turnover
+FROM Employee_Performance
+WHERE Termination_Year = 2023 -- Assuming you are interested in the year 2023
+GROUP BY Termination_Year, Termination_Quarter
+ORDER BY Termination_Year, Termination_Quarter;
+
+
+--Employee satisfaction score for this quarter as compared to the previous quarters of the year
+SELECT 
+    Termination_Quarter,
+    AVG(Employee_Satisfaction_Score) AS Average_Satisfaction
+FROM 
+    Employee_Performance
+WHERE 
+    Termination_Year = 2023 AND
+		Employee_Satisfaction_Score is not NULL
+GROUP BY 
+    Termination_Quarter
+ORDER BY 
+    Termination_Quarter;
+      
+--Correlation between regular training and turnover rate:
+
+SELECT AVG(Training_Hours_Last_Year) AS Avg_Training_Hours, COUNT(Employee_ID) AS Turnover
+FROM Employee_Performance
+WHERE Termination_Date IS NOT NULL
+GROUP BY Training_Hours_Last_Year;
+
+--Correlation between manager feedback and employee satisfaction:
+SELECT AVG(Manager_Feedback_Score) AS Avg_Manager_Feedback, AVG(Employee_Satisfaction_Score) AS Avg_Satisfaction
+FROM Employee_Performance
+GROUP BY Employee_ID;
